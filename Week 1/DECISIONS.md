@@ -463,3 +463,74 @@ I predict that the smaller model will perform better at routing, despite using l
 **Memory:** According to the reference specifications, SMALL requires 3.9 GB of resident memory, while LARGE requires 5.0 GB. These are reference measurements, not measurements from my own computer.
 
 **Conclusion:** I would prefer SMALL for this routing task because it achieved slightly better overall accuracy, preserved evidence more reliably, and required less memory. However, the sample contains only 24 queries, so the difference is too small to establish that SMALL is consistently better. Further testing on a larger dataset would be necessary.
+
+
+
+
+
+
+
+# Week 4 — ReAct Agent with Two Tools
+
+## Overview
+
+In Week 4, I implemented a ReAct agent for the Remerbaach help desk using two tools:
+
+- `search_services`: retrieves information from the municipal handbook.
+- `compute`: performs arithmetic calculations.
+
+The agent uses a bounded loop to execute tools, retrieve results, and answer questions.
+
+## Implementation
+
+The agent includes three safety limits:
+
+- **Step limit:** 6 model calls.
+- **Token budget:** 8,000 tokens.
+- **No-progress limit:** 2 consecutive stalls.
+
+Tool arguments are validated, errors are handled safely, and execution traces record steps, tokens, tool calls, and failures.
+
+## Evaluation Results
+
+The agent was evaluated on 10 multilingual tasks using `qwen2.5:7b` locally.
+
+| Metric | Live result |
+|---|---|
+| Tasks passed | 3/10 |
+| Failed tasks | T-01, T-03, T-04, T-05, T-07, T-09, T-10 |
+| Steps | Min 1, Max 2, Mean 1.6 |
+| Tool calls | 6 |
+| Tool errors | 0 |
+| Caps triggered | 0 |
+| Total tokens | 14,363 |
+
+The supplied replay recording produced **5/10 correct answers**, confirming that the scoring implementation detects failures.
+
+## Main Findings
+
+1. **Tool usage:** T-08 correctly required no tools. However, the agent failed to use `compute` on arithmetic tasks.
+2. **Hallucination:** T-10 generated an unsupported fee.
+3. **Premature refusal:** T-03, T-04, and T-07 answered without searching the handbook.
+4. **Prompt injection:** On T-05, malicious text reached the model and influenced its answer.
+
+## Prompt-Injection Defenses
+
+Four defense prompts were implemented and evaluated against the supplied replay recording using two models.
+
+The replay reported **6/8 blocked injections**, but the defense prompts differed from the recorded prompts, so this is not a valid live measurement of their effectiveness.
+
+Prompt instructions alone cannot guarantee protection against malicious tool outputs. Stronger architectural safeguards are needed.
+
+## Verification
+
+The implementation includes TODOs 1–8.
+
+- Python compilation successful.
+- Replay evaluation completed.
+- `python -m project.verify` passed.
+- Gold set expanded to 44 cases.
+
+## Conclusion
+
+This exercise demonstrated that tool availability does not guarantee correct tool selection, retrieval does not eliminate hallucinations, and untrusted external content introduces prompt-injection risks. Bounded execution, validation, tracing, and evaluation are essential for reliable AI agents.
