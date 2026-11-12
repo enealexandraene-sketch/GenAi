@@ -1,0 +1,97 @@
+{
+  "rows": [
+    {
+      "architecture": "A baseline",
+      "green": false,
+      "tool_calls": 0,
+      "tokens": 0,
+      "seconds": 53.1
+    },
+    {
+      "architecture": "B planner",
+      "green": true,
+      "plan_ok": true,
+      "plan_problems": [],
+      "applied": "applied",
+      "verdict": null,
+      "verdict_reason": null,
+      "fix": "discounts.py: return OFF_PEAK_RATE if is_off_peak(booking.start_hour) else 0.0 -> return OFF_PEAK_RATE if is_off_peak(booking.start_hour) or booking.start_hour == 20 else 0.0",
+      "tokens": 1556,
+      "seconds": 83.3
+    },
+    {
+      "architecture": "C planner+reviewer",
+      "green": false,
+      "plan_ok": true,
+      "plan_problems": [],
+      "applied": "not attempted",
+      "verdict": "reject",
+      "verdict_reason": "The fix introduces a bug by capping the discount at 0.0, failing the test 'test_off_peak_starts_at_twenty'.",
+      "fix": "discounts.py: return off_peak_discount(booking) -> return max(off_peak_discount(booking), 0.0)",
+      "tokens": 2129,
+      "seconds": 109.3
+    },
+    {
+      "architecture": "A baseline",
+      "green": false,
+      "tool_calls": 6,
+      "tokens": 3489,
+      "seconds": 109.9
+    },
+    {
+      "architecture": "B planner",
+      "green": true,
+      "plan_ok": true,
+      "plan_problems": [],
+      "applied": "applied",
+      "verdict": null,
+      "verdict_reason": null,
+      "fix": "discounts.py: return start_hour > OFF_PEAK_FROM_HOUR -> return start_hour >= OFF_PEAK_FROM_HOUR",
+      "tokens": 1517,
+      "seconds": 73.2
+    },
+    {
+      "architecture": "C planner+reviewer",
+      "green": false,
+      "plan_ok": true,
+      "plan_problems": [],
+      "applied": "not attempted",
+      "verdict": "reject",
+      "verdict_reason": "The change affects the test result, causing the `test_off_peak_starts_at_twenty` to fail.",
+      "fix": "discounts.py: return start_hour > OFF_PEAK_FROM_HOUR -> return start_hour >= OFF_PEAK_FROM_HOUR",
+      "tokens": 2044,
+      "seconds": 92.8
+    },
+    {
+      "architecture": "A baseline",
+      "green": true,
+      "tool_calls": 18,
+      "tokens": 14107,
+      "seconds": 256.1
+    },
+    {
+      "architecture": "B planner",
+      "green": true,
+      "plan_ok": true,
+      "plan_problems": [],
+      "applied": "applied",
+      "verdict": null,
+      "verdict_reason": null,
+      "fix": "discounts.py: return OFF_PEAK_RATE if is_off_peak(booking.start_hour) else 0.0 -> return OFF_PEAK_RATE if is_off_peak(booking.start_hour) or booking.start_hour == OFF_PEAK_FROM_HOUR else 0.0",
+      "tokens": 1526,
+      "seconds": 75.8
+    },
+    {
+      "architecture": "C planner+reviewer",
+      "green": false,
+      "plan_ok": true,
+      "plan_problems": [],
+      "applied": "not attempted",
+      "verdict": "reject",
+      "verdict_reason": "The fix introduces an additional condition that changes the test results. The test specifically fails for start_hour 20, indicating the fix is incorrect.",
+      "fix": "discounts.py: return OFF_PEAK_RATE if is_off_peak(booking.start_hour) else 0.0 -> return OFF_PEAK_RATE if is_off_peak(booking.start_hour) or booking.start_hour == 20 else 0.0",
+      "tokens": 2153,
+      "seconds": 109.4
+    }
+  ]
+}

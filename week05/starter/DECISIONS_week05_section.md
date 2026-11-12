@@ -1,0 +1,76 @@
+# Week 5: a planner, an executor, and a second agent
+
+Copy this into your `DECISIONS.md` and fill it in.
+
+---
+
+## Week 5
+
+**Run conditions.** model: [ ] | framework: Pydantic AI [version] |
+runs per architecture: [ ] | served locally | date: [YYYY-MM-DD] |
+table from: [the recording / my own runs]
+
+### 1. The plan schema
+
+What I tried first, and what happened:
+
+[If you tried a nested list of Step objects, say what the error was. It does
+not fail gracefully and the error message does not mention schemas.]
+
+What I shipped, and why it is shaped that way:
+
+[...]
+
+### 2. The validator
+
+| check | what it catches |
+| | |
+| | |
+| | |
+
+On a failed check my system [repairs once / refuses], because [ ].
+
+### 3. The three-way table
+
+| architecture | green | tokens (mean) | seconds (mean) |
+| A baseline | /3 | | |
+| B planner | /3 | | |
+| C planner + reviewer | /3 | | |
+
+### 4. Why the baseline fails
+
+[Not "the model is too small". Look at what changed between A and B: it is
+not the model and it is not the prompt. Name it.]
+
+### 5. The reviewer
+
+Verdicts across my runs: [ ] approve, [ ] reject.
+
+Would I ship it: [ ]. Extra cost: [ ] tokens, [ ] seconds per run.
+
+The case where it would earn its cost:
+
+[...]
+
+### 6. What my verifier cannot catch
+
+[The most valuable line on this page. The test suite is free, fast, and
+deterministic, and it still only checks the cases somebody wrote a test for.
+Name a change that would make the suite green and still be wrong. Week 10
+comes back for this.]
+
+### Deferred
+
+[Anything you did not get to, and why.]
+
+### Homework — Task B: Refactoring
+
+I replaced the repeated discount values with constants in a separate copy of the repository.
+
+| Architecture | Before | After |
+| A baseline | 0/3 | 1/3 |
+| B planner | 2/3 | 3/3 |
+| C planner + reviewer | 0/3 | 0/3 |
+
+The planner still worked best. After refactoring, it passed all 3 runs, while the baseline only passed 1.
+The gap between the planner and baseline stayed the same at 2 successful runs, so it didn't really widen. Refactoring might have helped, but with only 3 runs it's hard to be sure.
