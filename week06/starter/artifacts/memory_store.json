@@ -1,0 +1,28 @@
+{
+  "facts": [
+    {
+      "subject": "Alice",
+      "kind": "preference",
+      "text": "Prefers email contact",
+      "handle": "fact-91a7a6cb3bfe3ebc",
+      "written_at": "1794502376.935691"
+    },
+    {
+      "subject": "Bob",
+      "kind": "preference",
+      "text": "Prefers phone contact",
+      "handle": "fact-77b319e06578a327",
+      "written_at": "1794502464.834819"
+    },
+    {
+      "subject": "A. Muller",
+      "kind": "issue",
+      "text": "Broken heating in the meeting room",
+      "handle": "fact-45ed605e0eb0f46a",
+      "written_at": "1794503058.231806"
+    }
+  ],
+  "cases": {
+    "case-febcc7cba296": "A. Muller"
+  }
+}

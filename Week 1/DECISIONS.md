@@ -534,3 +534,74 @@ The implementation includes TODOs 1–8.
 ## Conclusion
 
 This exercise demonstrated that tool availability does not guarantee correct tool selection, retrieval does not eliminate hallucinations, and untrusted external content introduces prompt-injection risks. Bounded execution, validation, tracing, and evaluation are essential for reliable AI agents.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## Week 6 — Memory, MCP and A2A
+
+**Run conditions:** MCP SDK `2.0.0rc1` | Specification revision `2026-07-28` | Local execution | Date: 12 November 2026
+
+### 1. Handle design
+
+I used randomly generated handles such as `fact-91a7a6cb3bfe3ebc` and `case-febcc7cba296`.
+
+Random handles are preferable to sequential IDs because predictable handles could allow someone to guess other residents' identifiers. However, random handles are not a replacement for authorization.
+
+### 2. Conflict and retention policy
+
+The memory store appends new facts rather than overwriting existing ones. This preserves history but can leave contradictory facts that need to be resolved during retrieval.
+
+Records currently have no automatic expiration. This is acceptable for the lab but would require a retention and deletion policy in a real system containing residents' data.
+
+### 3. Retrieval cost
+
+The search method filters facts by subject before ranking them by keyword overlap.
+
+It returns at most `k` matching facts. A larger `k` increases the amount of context and therefore the token cost. With 400 stored facts, the current implementation scans the stored facts rather than using an index, making it less efficient as the dataset grows.
+
+### 4. Memory off versus memory on
+
+Persistent memory successfully retained information after reloading the store.
+
+The memory-on/off comparison has not yet been measured in tokens and turns. No numerical improvement is claimed.
+
+### 5. Stateless MCP verification
+
+| Server mode | HTTP status | Session ID | Result |
+|---|---|---|---|
+| Stateless | 200 | None | Request accepted |
+| Session-based | 400 | Present | Request rejected |
+
+The session-based server returned `Bad Request: Missing session ID`.
+
+Two server instances successfully shared a case handle and retrieved stored facts. However, this alone does not prove protocol statelessness, because both instances use the same disk-backed store.
+
+The raw HTTP experiment provides the stronger evidence: an identical request succeeds without session state in stateless mode and fails in session-based mode.
+
+### 6. Limitations of forgetting
+
+The `forget()` method permanently removes a fact from the persistent store, but cannot remove copies already included in an active conversation or other external records.
+
+A real system would need additional controls to manage the lifecycle of residents' personal information.
+
+### A2A demonstration
+
+The A2A-style demonstration successfully covered capability discovery, delegation, failed tasks, timeouts, and non-text artifacts.
+
+The client checks the agent card's `skills` field before delegation, retains task identifiers after timeouts, and reports incompatible artifacts instead of silently converting them.
+
+### Deferred work
+
+The memory-on/off token comparison, authorization checks for case handles, and implementation of the A2A channel as an independent homework exercise remain to be completed.
